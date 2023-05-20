@@ -301,7 +301,6 @@ class TelenetClient:
                 self.get_product(child, is_child=True)
 
         specs = self.get_product_specs(product.get('specurl'), is_child)
-        _LOGGER.debug(f"   {specs}")
         _LOGGER.debug(f"{product.get('identifier')}|{product.get('productType')}|{product.get('label')}")
         if self.bss_system == 'TELENET_LEGACY':
             type = product.get('label').split(".")[0]
