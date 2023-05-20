@@ -182,7 +182,7 @@ class TelenetClient:
 
     def get_legacy_internet(self, product, specs):
         """Retrieve internet details."""
-        response = self.ocapi('internetusage,modemdetails')
+        response = self.ocapi('internetusage,modemdetails,modems')
         businessidentifier = None
         if response:
             for internetusage in response.get('internetusage'):
@@ -251,6 +251,18 @@ class TelenetClient:
                     if modem.get('internetlineidentifier') == businessidentifier:
                         del modem["installationaddress"]
                         modem.update({'type': 'Modem'})
+                        self.data.get('devices').update({
+                            modem.get('cableroutername'): modem
+                        })
+            if "modems" in response:
+                for modem in response.get('modems'):
+                    if modem.get('internetlineidentifier') == businessidentifier:
+                        del modem["address"]
+                        settings = modem.get('settings')
+                        if len(settings) and settings[0].get('passphrase'):
+                            passphrase = settings[0].get('passphrase').replace(":", r"\:")
+                            modem.update({'passphrase': f"WIFI:S:{settings[0].get('ssid')};T:WPA;P:{passphrase};;"})
+                        modem.update({'type': 'Wifi modem'})
                         self.data.get('devices').update({
                             modem.get('cableroutername'): modem
                         })
