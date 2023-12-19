@@ -53,7 +53,6 @@ class TelenetClient:
 
     def login(self) -> dict:
         """Start a new Telenet session with a user & password."""
-
         _LOGGER.debug("[TelenetClient|login|start]")
         response = self.request(f"{self.environment.ocapi_oauth}/userdetails")
         if response.status_code == 200:
@@ -105,7 +104,6 @@ class TelenetClient:
 
     def ocapi(self, service, method, version=1, params={}, return_response=False):
         """Call Telenet OCAPI."""
-
         params = urllib.parse.urlencode(params)
         response = self.request(
             f"{self.environment.ocapi_public_api}/{service}-service/v{version}/{method}?{params}",

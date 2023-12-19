@@ -62,7 +62,6 @@ class TelenetClient:
 
     def login(self) -> dict:
         """Start a new Telenet session with a user & password."""
-
         _LOGGER.debug("[TelenetClient|login|start]")
         response = self.request(f"{self.environment.ocapi_oauth}/userdetails")
         if response.status_code == 200:
@@ -115,7 +114,6 @@ class TelenetClient:
 
     def ocapi(self, service, method=None, version=1, params={}, return_response=False):
         """Call Telenet OCAPI."""
-
         params = urllib.parse.urlencode(params)
         if self.bss_system == "TELENET_LEGACY":
             for scope in service.split(","):
@@ -149,7 +147,6 @@ class TelenetClient:
 
     def get_product_specs(self, specurl, is_child):
         """Fetch product specs data."""
-
         # print(f"SPECURL: {specurl}")
         parsed = urllib.parse.urlparse(specurl)
         product = parsed.path.split("/")[-1]
