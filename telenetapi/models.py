@@ -16,6 +16,7 @@ class TelenetEnvironment:
     referer: str
     x_alt_referer: str
 
+
 @dataclass
 class TelenetDataElement:
     """Class to describe a Telenet API response."""
