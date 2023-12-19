@@ -1,4 +1,4 @@
-name: Bump version and Release
+name: Release - Bump and Release
 on: [workflow_dispatch]
 
 concurrency:
@@ -14,7 +14,7 @@ jobs:
       pull-requests: write
     steps:
       - name: ⤵️　Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
@@ -51,7 +51,7 @@ jobs:
           publish: true
 
       - name: "✏️　Generate release changelog"
-        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        uses: heinrichreimer/github-changelog-generator-action@v2.4
         with:
           token: ${{ secrets.GH_PAT }}
           issues: true
@@ -67,7 +67,7 @@ jobs:
           message: Commit release notes
 
       - name: ✅　Set up Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: ✅　Install dependencies
@@ -81,3 +81,10 @@ jobs:
         run: |
           python setup.py sdist bdist_wheel
           twine upload dist/*
+      - name: Discord notification
+        env:
+          tag_name: ${{ steps.release_drafter.outputs.tag_name }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "New release published: https://github.com/{{ EVENT_PAYLOAD.repository.full_name }}/releases/tag/{{tag_name}}"

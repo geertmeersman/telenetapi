@@ -2,20 +2,16 @@
 from __future__ import annotations
 
 import logging
-from requests import (
-    Session,
-)
-
 import urllib.parse
 
-from .const import BASE_HEADERS
-from .const import TIMEOUT
-from .const import DEFAULT_TELENET_ENVIRONMENT
-from .exceptions import BadCredentialsException
-from .exceptions import TelenetServiceException
+from requests import Session
+
+from .const import BASE_HEADERS, DEFAULT_TELENET_ENVIRONMENT, TIMEOUT
+from .exceptions import BadCredentialsException, TelenetServiceException
 from .models import TelenetEnvironment
 
 _LOGGER = logging.getLogger(__name__)
+
 
 class TelenetClient:
     """Class to communicate with the Telenet API."""
@@ -23,12 +19,13 @@ class TelenetClient:
     session: Session
     environment: TelenetEnvironment
 
-    def __init__(self,
-                 username,
-                 password,
-                 headers: dict | None = BASE_HEADERS,
-                 environment: TelenetEnvironment = DEFAULT_TELENET_ENVIRONMENT,
-                 ) -> None:
+    def __init__(
+        self,
+        username,
+        password,
+        headers: dict | None = BASE_HEADERS,
+        environment: TelenetEnvironment = DEFAULT_TELENET_ENVIRONMENT,
+    ) -> None:
         """Initialize the Communication API to get data."""
         self.username = username
         self.password = password
@@ -56,7 +53,6 @@ class TelenetClient:
 
     def login(self) -> dict:
         """Start a new Telenet session with a user & password."""
-
         _LOGGER.debug("[TelenetClient|login|start]")
         response = self.request(f"{self.environment.ocapi_oauth}/userdetails")
         if response.status_code == 200:
@@ -102,12 +98,12 @@ class TelenetClient:
                 f"HTTP {response.status_code} Missing customer number"
             )
         self.userdetails = userdetails
-        del self.userdetails["scopes"]
+        if "scopes" in self.userdetails:
+            del self.userdetails["scopes"]
         return response.json()
 
     def ocapi(self, service, method, version=1, params={}, return_response=False):
         """Call Telenet OCAPI."""
-
         params = urllib.parse.urlencode(params)
         response = self.request(
             f"{self.environment.ocapi_public_api}/{service}-service/v{version}/{method}?{params}",
@@ -120,7 +116,9 @@ class TelenetClient:
 
     def fetch_data(self):
         """Fetch all Telenet data."""
-        response = self.ocapi("product", "products", params={"status":"ACTIVE"}, return_response=True)
+        response = self.ocapi(
+            "product", "products", params={"status": "ACTIVE"}, return_response=True
+        )
         if response.status_code == 200:
             return self.fetch_new_api_data()
         if response.status_code == 500:
@@ -138,7 +136,7 @@ class TelenetClient:
         data = {}
         data.update({"telenet_api": "NEW"})
 
-        data.update({"customer":                self.ocapi("customer", "customers")})
+        data.update({"customer": self.ocapi("customer", "customers")})
 
         """
         data.update({"producttypes_plan":       self.ocapi("product", "product-subscriptions", params={"producttypes":"PLAN"})})
