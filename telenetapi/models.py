@@ -1,4 +1,5 @@
 """Models used by telenetapi."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
