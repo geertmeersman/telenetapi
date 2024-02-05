@@ -1,4 +1,5 @@
 """Setuptools for telenetapi."""
+
 import setuptools
 
 with open("README.md") as fh:
