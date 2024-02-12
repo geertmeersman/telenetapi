@@ -33,6 +33,7 @@ lint.ignore = [
     "D404",  # First word of the docstring should not be This
     "D406",  # Section name should end with a newline
     "D407",  # Section name underlining
+    "F401",  # imported but unused
     "D411",  # Missing blank line before section
     "E501",  # line too long
     "T201",  # 'print' found
