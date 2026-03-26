@@ -38,7 +38,7 @@ jobs:
           echo $tag_name > VERSION
 
       - name: 🚀　Add and commit changes
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           message: Bump version
 
@@ -62,7 +62,7 @@ jobs:
           addSections: '{"documentation":{"prefix":"**Documentation:**","labels":["documentation"]}}'
 
       - name: ✅　Commit release notes
-        uses: EndBug/add-and-commit@v9
+        uses: EndBug/add-and-commit@v10
         with:
           message: Commit release notes
 
